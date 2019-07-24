@@ -1,8 +1,10 @@
 package com.jeanov.sales.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +28,8 @@ public class OrderService {
 		Order order = new Order(orderTO.getClientId());
 		List<ProductDetail> products = convertToProductsDetails(orderTO.getProductsDetails(), order);
 		order.setProductsDetails(products);
+		order.setOrderId(RandomStringUtils.random(8, true, true));
+		order.setDate(new Date());
 		return this.orderRepository.save(order);
 	}
 
@@ -36,5 +40,9 @@ public class OrderService {
 			products.add(product);
 		});
 		return products;
+	}
+
+	public List<Order> getOrders() {
+		return this.orderRepository.findAll();
 	}
 }
